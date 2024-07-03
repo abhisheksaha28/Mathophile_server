@@ -3,6 +3,7 @@ import express from 'express';
 import dotenv from "dotenv";
 import { connectDB } from './db/db.js';
 import cors from "cors";
+import { userRoutes } from './routes/user.routes.js';
 /****************** IMPORRTING DONE  ************************/ 
 
 dotenv.config();
@@ -21,8 +22,11 @@ app.use(cors())
 
 
 // $%$%$%%$%$ =====> USING THE ROUTES THAT WE SETUP
-// app.use('/user' , userRoute);
+ 
 // app.use('/residency',residencyRoute);
+
+ app.use('/api' , userRoutes);
+
 
  
 
