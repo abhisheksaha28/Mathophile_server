@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 
-
+/***************************** MIDDLEWARE FOR USER AUTHENTICATION ****************/
 const isAuth = async (req, res, next) => {
     try {
       //token was send via headers , so we will fetch the token from headers
@@ -28,6 +28,28 @@ const isAuth = async (req, res, next) => {
       });
     }
   };
+  /***************************** MIDDLEWARE FOR USER AUTHENTICATION DONE****************/
 
 
-  export { isAuth };
+
+  /***************************** MIDDLEWARE FOR ADMIN AUTHENTICATION ****************/
+
+  const isAdmin = (req, res, next) => {
+    try {
+      if (req.user.role !== "admin")
+        return res.status(403).json({
+          message: "You are not admin",
+        });
+  
+      next();
+    } catch (error) {
+      res.status(500).json({
+        message: error.message,
+      });
+    }
+  };
+
+  /***************************** MIDDLEWARE FOR USER AUTHENTICATION DONE****************/
+
+
+  export { isAuth , isAdmin };

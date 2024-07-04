@@ -1,3 +1,5 @@
+//  ###### SELF_CORRECTION :- the below written code , is basically not a middleware, it is basically a Utility function ,but by mistake i wrote it as a middleware
+
 import {createTransport} from "nodemailer";
 
 //fn_name = async(req,res,next)=>
