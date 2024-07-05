@@ -52,4 +52,23 @@ const uploadOnCloudinary = async (localFilePath) => {
 }
 
 
-  export { uploadOnCloudinary };
+//for deleting from cloudinary , we not only need th cloudinary url_id of the media file , but alos we need to determine the type of the file(img,vid,text,etc)
+//so here we will take 2 parameters , one for id and another for type
+const deleteFromCloudinary = async (publicId,urlType) => {
+
+  //we are taking he public id as a parameter,and we will delete the media file with ths parameter from cloudinary
+
+  try {
+    const result = await cloudinary.uploader.destroy(publicId,{
+      resource_type: urlType
+    });
+    console.log('Resource deleted' );
+    return result;
+  } catch (error) {
+    console.error('Error deleting resource:', error);
+    throw error;
+  }
+};
+
+
+  export { uploadOnCloudinary , deleteFromCloudinary };

@@ -1,8 +1,12 @@
 
+import { extractPublicIdFromUrl } from "../helpers/uriID.js";
+import { determineResourceType } from "../helpers/uriType.js";
 import { Courses } from "../models/courses.model.js";
 import { Lecture } from "../models/lecture.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { User } from "../models/user.model.js";
+import { uploadOnCloudinary,deleteFromCloudinary } from "../utils/cloudinary.js";
 import { tryCatchHandler } from "../utils/tryCatchHandler.js";
+
 
 /************************ CONTROLLER FOR COURSE CREATION ************/
 
@@ -113,7 +117,107 @@ if(!file){
 
 
 
+     /************************ CONTROLLER FOR DELETING LECTURE  ************/
+    
+    const deleteLecture = tryCatchHandler( async(req,res) => {
+
+      //1st find the lecture to be deleted
+      const lecture = await Lecture.findById(req.params.id);
+
+      //find the cloudinary url of the lecture video from the db
+      const uri = lecture.video;
+       
+
+      //get the cloudinary_id
+       const publicID = extractPublicIdFromUrl(uri);
+       //console.log(publicID);
+
+       //get the file type
+       const urlType = determineResourceType(uri);
+       console.log(urlType);
+
+      //now delete the video from  cloudinary
+      const result = await deleteFromCloudinary(publicID,urlType);
+       
+      console.log("Resource deleted successfully")
+
+      //delete the lecture from mongodb
+      await lecture.deleteOne();
+
+      res.status(200).json({ message: "Lecture Deleted Successfully" });
+        
+
+    });
+    /************************ CONTROLLER FOR DELETING LECTURE DONE ************/
+
+
+
+    /************************ CONTROLLER FOR DELETING COURSE ************/
+
+    const deleteCourse = tryCatchHandler( async(req,res) => {
+
+      //1.get the course
+      const course = await Courses.findById(req.params.id);
+      
+      //2.get all the lectures
+      const lectures = await Lecture.find({ course: course._id });
+
+      //3.delete all the lectures first
+      await Promise.all(
+        lectures.map(async (lecture) => {
+           //lecture url
+           const uri = lecture.video;
+          
+           //cloudinary url
+           const publicID = extractPublicIdFromUrl(uri);
+           
+           //file type
+           const urlType = determineResourceType(uri);
+
+           //delete from cloudinary
+           await deleteFromCloudinary(publicID,urlType);
+
+          console.log("video deleted");
+        })
+      );
+
+      //4.delete the image
+       //image url
+       const uriImg = course.image;
+          
+       //cloudinary url
+       const imgID = extractPublicIdFromUrl(uriImg);
+       
+       //file type
+       const extType = determineResourceType(uriImg);
+
+       //delete from cloudinary
+       await deleteFromCloudinary(imgID,extType);
+
+      console.log("image deleted");
+
+      //now delete lecctures urls from db 
+      await Lecture.find({ course: req.params.id }).deleteMany();
+
+      //delete the course
+      await course.deleteOne();
+
+      //delete the course from user's subscriptions also
+      await User.updateMany({}, { $pull: { subscription: req.params.id } });
+
+      res.status(202).json({
+        message: "Course Deleted Successfully",
+      });
+
+
+    });
+
+
+    /************************ CONTROLLER FOR DELETING COURSE DONE************/
+
+
+
  
 
 
-export { createCourse , addLectures };
+export { createCourse , addLectures , deleteLecture , deleteCourse };
