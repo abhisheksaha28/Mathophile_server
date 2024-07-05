@@ -1,6 +1,6 @@
 import express from "express";
 import { isAdmin, isAuth } from "../middlewares/auth.middleware.js";
-import { addLectures, createCourse, deleteCourse, deleteLecture } from "../controllers/admin.controller.js";
+import { addLectures, createCourse, deleteCourse, deleteLecture, getAllStats } from "../controllers/admin.controller.js";
 import { uploadFile } from "../middlewares/multer.middleware.js";
 
 
@@ -32,6 +32,9 @@ router.delete("/lecture/:id",isAuth,isAdmin,deleteLecture);
 
 //route for deleting a course
 router.delete("/course/:id",isAuth,isAdmin,deleteCourse);
+
+//route for getting all stats
+router.get("/stats",isAuth,isAdmin,getAllStats);
 
 
 /***************************     SETTING UP THE ROUTES DONE**********************************/

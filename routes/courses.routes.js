@@ -1,5 +1,5 @@
 import express from "express";
-import { fetchLecture, fetchLectures, getAllCourses, getSingleCourse } from "../controllers/courses.controller.js";
+import { checkout, fetchLecture, fetchLectures, getAllCourses, getMyCourses, getSingleCourse, paymentVerification } from "../controllers/courses.controller.js";
 import { isAuth } from "../middlewares/auth.middleware.js";
 
 
@@ -19,6 +19,15 @@ router.get("/lectures/:id",isAuth,fetchLectures);
 
 //router for getting  particular lecture of a course
 router.get("/lecture/:id",isAuth,fetchLecture);
+
+//route for getting all my courses
+router.get("/mycourses/",isAuth,getMyCourses);
+
+//route for checking out on courses
+router.post("/course/checkout/:id",isAuth,checkout);
+
+//route for payment verification
+router.post("/verification/:id",isAuth,paymentVerification);
 
 
 /***************************     SETTING UP THE ROUTES DONE**********************************/

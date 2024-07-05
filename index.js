@@ -6,9 +6,17 @@ import cors from "cors";
 import { userRoutes } from './routes/user.routes.js';
 import { courseRoutes } from './routes/courses.routes.js';
 import { adminRoutes } from './routes/admin.routes.js';
+import Razorpay from 'razorpay';
 /****************** IMPORRTING DONE  ************************/ 
 
+//configure env
 dotenv.config();
+
+//create razorpay instance
+export const instance = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY,
+    key_secret: process.env.RAZORPAY_SECRET,
+  });
 
 
 /****************** SETTING UP EXPRESS APP ************************/ 

@@ -216,8 +216,29 @@ if(!file){
     /************************ CONTROLLER FOR DELETING COURSE DONE************/
 
 
+     
+    /************************ CONTROLLER FOR ALL STATS************/
+
+      const getAllStats = tryCatchHandler(async (req, res) => {
+      const totalCoures = (await Courses.find()).length;
+      const totalLectures = (await Lecture.find()).length;
+      const totalUsers = (await User.find()).length;
+    
+      const stats = {
+        totalCoures,
+        totalLectures,
+        totalUsers,
+      };
+    
+      res.json({
+        stats,
+      });
+    });
+    /************************ CONTROLLER   DONE************/
+
+
 
  
 
 
-export { createCourse , addLectures , deleteLecture , deleteCourse };
+export { createCourse , addLectures , deleteLecture , deleteCourse , getAllStats };
