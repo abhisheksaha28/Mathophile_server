@@ -1,6 +1,6 @@
 import express from "express";
 import { isAdmin, isAuth } from "../middlewares/auth.middleware.js";
-import { addLectures, createCourse, deleteCourse, deleteLecture, getAllStats } from "../controllers/admin.controller.js";
+import { addLectures, createCourse, deleteCourse, deleteLecture, getAllStats, getAllUser, updateRole } from "../controllers/admin.controller.js";
 import { uploadFile } from "../middlewares/multer.middleware.js";
 
 
@@ -17,6 +17,7 @@ router.post("/course/new",isAuth,isAdmin,uploadFile.fields([
         maxCount : 1
     }
 ]),createCourse);
+//router.post("/course/new",isAuth,isAdmin,uploadFile.single('image') ,createCourse);
 
 //router for adding lecture
 //take id of the course, and token also from the user login
@@ -35,6 +36,12 @@ router.delete("/course/:id",isAuth,isAdmin,deleteCourse);
 
 //route for getting all stats
 router.get("/stats",isAuth,isAdmin,getAllStats);
+
+//route for getting all user
+router.get("/users",isAuth,isAdmin,getAllUser);
+
+//route for updating thr role of a user
+router.put("/user/:id",isAuth,isAdmin,updateRole);
 
 
 /***************************     SETTING UP THE ROUTES DONE**********************************/

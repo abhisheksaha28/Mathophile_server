@@ -27,14 +27,18 @@ const app=express();
 
 app.use(express.json())
  
-app.use(cors())
+//app.use(cors())
+app.use( cors({
+    origin:process.env.CORS_ORIGIN,
+    credentials:true
+}))
 
 //aibar amar je URL uida re o configure korte hoiobo
 app.use(express.urlencoded({extended:true}))
 
 //jodi ami amar njer server a kun media, like pdf,imge,etc  kunu kisu store kortam chai, uida ami public folder a store koira rakhi
 //uuida re o configure kore hoy, static diya
-app.use(express.static("public"))
+app.use('/uploads',express.static("public/uploads"))
 
 
 
