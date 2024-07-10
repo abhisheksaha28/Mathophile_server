@@ -93,15 +93,22 @@ const fetchLecture = tryCatchHandler( async(req,res) =>{
     //1.find user
     const user = await User.findById(req.user._id);
 
+    //find the course, of which this is the lecture
+    const course_id = lecture.course;
+
     //2.check for admin
     if(user.role === "admin"){
         return res.status(202).json({ message:"Lecture  you asked for:-" , lecture });
     }
 
     //3.if not admin, then check whether user has byed the course or not
-    if(!user.subscription.includes(req.params.id)){
+    if(!user.subscription.includes(course_id)){
         return res.status(400).json({ message:"Buy the Course to see the content"});
     }
+
+    //  if(user.subscription.includes(course_id)){
+    //     return res.status(202).json({ message:"Lecture you desired:-" , lecture});
+    // }
 
     //if above all fils, means the user has buyed
     res.status(202).json({ message:"Lecture you desired:-" , lecture});
